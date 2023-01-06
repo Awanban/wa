@@ -1,41 +1,53 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>Pencarian</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
+  
 </head>
 <body>
-  <div class="container">
-    <h1>Pencarian</h1>
-    <form>
-      <input type="text" id="searchInput" placeholder="Cari...">
-      <button type="button" id="searchButton">Cari</button>
-    </form>
-    <div id="searchResults"></div>
-  </div>
+  <form>
+    <input type="text" id="query" placeholder="Enter your search query">
+    <input type="submit" value="Search">
+  </form>
+  <div id="results"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script>
-    const searchButton = document.getElementById('searchButton');
-    const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('searchResults');
+    const apiKey = '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';
 
-    searchButton.addEventListener('click', () => {
-      const query = searchInput.value;
-      search(query);
-    });
+    // Make a search request to the OpenAI API when the form is submitted
+    document.querySelector('form').addEventListener('submit', event => {
+      event.preventDefault();
+      const query = document.querySelector('#query').value;
 
-    async function search(query) {
-      const response = await fetch(`https://api.openai.com/v1/search?query=${query}&api_key=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`);
-      const results = await response.json();
-      searchResults.innerHTML = '';
-      results.forEach(result => {
-        const item = document.createElement('div');
-        item.innerHTML = result.title;
-        searchResults.appendChild(item);
+      axios.get('https://api.openai.com/v1/search', {
+        params: {
+          query: query,
+          model: 'davinci',
+          api_key: apiKey
+        }
+      }).then(response => {
+        // Display the results on the page
+        const results = document.createElement('pre');
+        results.innerHTML = JSON.stringify(response.data, null, 2);
+        document.body.appendChild(results);
+      }).catch(error => {
+        console.log(error);
       });
-    }
+    });
+  </script>
+  <script>
+  const resultsContainer = document.querySelector('#results');
+
+// Clear any previous results
+resultsContainer.innerHTML = '';
+
+// Create a new element to contain the results
+const results = document.createElement('pre');
+results.innerHTML = JSON.stringify(response.data, null, 2);
+
+// Add the results to the page
+resultsContainer.appendChild(results);
+
   </script>
 </body>
 </html>
