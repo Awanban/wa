@@ -1,5 +1,5 @@
 
-const apiKey = 'RCMVjSAnwt5LKg3IARrIT3BlbkFJgAr7YEsJIAOGaAQHVIMU';
+const apiKey = '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';
 
 // Make a search request to the OpenAI API when the form is submitted
 document.querySelector('form').addEventListener('submit', event => {
