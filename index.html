@@ -1,57 +1,41 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
- 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/[email protected]/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-  <script>
-$(document).ready(function() {
-  $('form').submit(function(event) {
-    event.preventDefault();
-    var searchTerm = $('#search').val();
-
-    // Kirim permintaan pencarian ke OpenAI API
-    $.ajax({
-      url: 'https://api.openai.com/v1/search',
-      type: 'GET',
-      data: {
-        'query': searchTerm
-      },
-      success: function(response) {
-        // Tampilkan hasil pencarian ke dalam elemen HTML
-        $('#results').html(response);
-      },
-      error: function() {
-        console.log('Error');
-      }
-    });
-  });
-});
-  </script>
+  <meta charset="utf-8">
   <title>Pencarian</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container mt-5">
-    <h1 class="text-center mb-5">Pencarian</h1>
+  <div class="container">
+    <h1>Pencarian</h1>
     <form>
-  <div class="form-group">
-    <label for="search">Search</label>
-    <input type="text" class="form-control" id="search">
+      <input type="text" id="searchInput" placeholder="Cari...">
+      <button type="button" id="searchButton">Cari</button>
+    </form>
+    <div id="searchResults"></div>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-  </div>
-    <h1>hasil</h1>
-  <div id="results"></div>
-  <script>
-  $('#results').html(response);
 
+  <script>
+    const searchButton = document.getElementById('searchButton');
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+
+    searchButton.addEventListener('click', () => {
+      const query = searchInput.value;
+      search(query);
+    });
+
+    async function search(query) {
+      const response = await fetch(`https://api.openai.com/v1/search?query=${query}&api_key=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`);
+      const results = await response.json();
+      searchResults.innerHTML = '';
+      results.forEach(result => {
+        const item = document.createElement('div');
+        item.innerHTML = result.title;
+        searchResults.appendChild(item);
+      });
+    }
   </script>
 </body>
 </html>
